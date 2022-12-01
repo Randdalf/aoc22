@@ -23,8 +23,11 @@ example1 = """1000
 
 
 class MostCaloriesTests(unittest.TestCase):
-    def test_example1(slf):
-        slf.assertEqual(most_calories(parse(example1)), 24000)
+    def test_example1_1(slf):
+        slf.assertEqual(most_calories(parse(example1), 1), 24000)
+
+    def test_example1_3(slf):
+        slf.assertEqual(most_calories(parse(example1), 3), 45000)
 
 
 if __name__ == "__main__":
