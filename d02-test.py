@@ -4,16 +4,21 @@
 
 import unittest
 
-from d02 import parse, follow_guide
+from d02 import parse, encrypted_guide, decrypted_guide
 
 example1 = """A Y
 B X
 C Z"""
 
 
-class FollowGuideTests(unittest.TestCase):
+class EncryptedGuideTests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(follow_guide(parse(example1)), 15)
+        slf.assertEqual(encrypted_guide(parse(example1)), 15)
+
+
+class DecryptedGuideTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(decrypted_guide(parse(example1)), 12)
 
 
 if __name__ == "__main__":

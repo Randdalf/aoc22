@@ -9,16 +9,13 @@ def parse(data):
     return [(ord(x[0]) - ord('A'), ord(x[2]) - ord('X')) for x in data.split('\n')]
 
 
-def follow_guide(guide):
-    score = len(guide)
-    for oppo, resp in guide:
-        score += resp
-        if resp == oppo:
-            score += 3
-        elif (oppo + 1) % 3 == resp:
-            score += 6
-    return score
+def encrypted_guide(guide):
+    return len(guide) + sum(3 * ((r - o + 1) % 3) + r for o, r in guide)
+
+
+def decrypted_guide(guide):
+    return len(guide) + sum(3 * r + (o + r - 1) % 3 for o, r in guide)
 
 
 if __name__ == "__main__":
-    solve(2, parse, follow_guide)
+    solve(2, parse, encrypted_guide, decrypted_guide)
