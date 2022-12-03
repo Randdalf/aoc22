@@ -18,8 +18,7 @@ def misplaced(sacks):
     total = 0
     for sack in sacks:
         mid = len(sack) // 2
-        c1, c2 = set(sack[:mid]), set(sack[mid:])
-        total += sum(c1 & c2)
+        total += sum(set(sack[:mid]) & set(sack[mid:]))
     return total
 
 
