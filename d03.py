@@ -4,22 +4,31 @@
 
 from aoc import solve
 
-
-priorities = {}
-for item in range(26):
-    priorities[item + ord('a')] = 1 + item
-    priorities[item + ord('A')] = 27 + item
+priorities = [0 for i in range(128)]
+for i in range(26):
+    priorities[i + ord('a')] = 1 + i
+    priorities[i + ord('A')] = 27 + i
 
 
 def parse(data):
-    for rucksack in data.split('\n'):
-        mid = len(rucksack) // 2
-        yield set(rucksack[:mid]), set(rucksack[mid:])
+    return [[priorities[ord(i)] for i in s] for s in data.split('\n')]
 
 
-def mispacked(rucksacks):
-    return sum(priorities[ord(i)] for c1, c2 in rucksacks for i in (c1 & c2))
+def misplaced(sacks):
+    total = 0
+    for sack in sacks:
+        mid = len(sack) // 2
+        c1, c2 = set(sack[:mid]), set(sack[mid:])
+        total += sum(c1 & c2)
+    return total
+
+
+def badges(sacks):
+    total = 0
+    for i in range(0, len(sacks), 3):
+        total += sum(set(sacks[i]) & set(sacks[i+1]) & set(sacks[i+2]))
+    return total
 
 
 if __name__ == "__main__":
-    solve(3, parse, mispacked)
+    solve(3, parse, misplaced, badges)
