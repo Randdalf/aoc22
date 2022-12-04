@@ -4,7 +4,7 @@
 
 import unittest
 
-from d04 import parse, num_fully_contained
+from d04 import parse, num_contained, num_overlapped
 
 example1 = """2-4,6-8
 2-3,4-5
@@ -14,9 +14,14 @@ example1 = """2-4,6-8
 2-6,4-8"""
 
 
-class NumFullyContainedTests(unittest.TestCase):
+class NumContainedTests(unittest.TestCase):
     def test_example1(slf):
-        return slf.assertEqual(num_fully_contained(parse(example1)), 2)
+        return slf.assertEqual(num_contained(parse(example1)), 2)
+
+
+class NumOverlapsTests(unittest.TestCase):
+    def test_example2(slf):
+        return slf.assertEqual(num_overlapped(parse(example1)), 4)
 
 
 if __name__ == "__main__":

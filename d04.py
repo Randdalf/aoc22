@@ -17,13 +17,21 @@ def parse(data):
     return [parse_pair(pair) for pair in data.split('\n')]
 
 
-def fully_contained(a, b):
+def contain(a, b):
     return (a[0] >= b[0] and a[1] <= b[1]) or (b[0] >= a[0] and b[1] <= a[1])
 
 
-def num_fully_contained(pairs):
-    return sum(int(fully_contained(a, b)) for a, b in pairs)
+def num_contained(pairs):
+    return sum(int(contain(a, b)) for a, b in pairs)
+
+
+def overlap(a, b):
+    return not ((a[1] < b[0]) or (b[0] > a[1]) or (b[1] < a[0]) or (a[1] < b[0]))
+
+
+def num_overlapped(pairs):
+    return sum(int(overlap(a, b)) for a, b in pairs)
 
 
 if __name__ == "__main__":
-    solve(4, parse, num_fully_contained)
+    solve(4, parse, num_contained, num_overlapped)
