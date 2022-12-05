@@ -16,12 +16,12 @@ CrZsJsPPZsGzwwsLwLmpwMDw"""
 
 class MisplacedTests(unittest.TestCase):
     def test_example1(slf):
-        return slf.assertEqual(misplaced(parse(example1)), 157)
+        slf.assertEqual(misplaced(parse(example1)), 157)
 
 
 class BadgesTests(unittest.TestCase):
     def test_example1(slf):
-        return slf.assertEqual(badges(parse(example1)), 70)
+        slf.assertEqual(badges(parse(example1)), 70)
 
 
 if __name__ == "__main__":

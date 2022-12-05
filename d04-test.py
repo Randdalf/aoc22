@@ -16,12 +16,12 @@ example1 = """2-4,6-8
 
 class NumContainedTests(unittest.TestCase):
     def test_example1(slf):
-        return slf.assertEqual(num_contained(parse(example1)), 2)
+        slf.assertEqual(num_contained(parse(example1)), 2)
 
 
 class NumOverlapsTests(unittest.TestCase):
     def test_example2(slf):
-        return slf.assertEqual(num_overlapped(parse(example1)), 4)
+        slf.assertEqual(num_overlapped(parse(example1)), 4)
 
 
 if __name__ == "__main__":
