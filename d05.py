@@ -27,7 +27,7 @@ def parse(data):
     return parse_stacks(parts[0]), parse_proc(parts[1])
 
 
-def rearrange(input):
+def crate_mover_9000(input):
     stacks, proc = input
     for num, src, target in proc:
         for i in range(num):
@@ -35,5 +35,14 @@ def rearrange(input):
     return ''.join(stack[-1] for stack in stacks)
 
 
+def crate_mover_9001(input):
+    stacks, proc = input
+    for num, src, target in proc:
+        src_stack = stacks[src-1]
+        stacks[target-1].extend(src_stack[-num:])
+        stacks[src-1] = src_stack[:-num]
+    return ''.join(stack[-1] for stack in stacks)
+
+
 if __name__ == "__main__":
-    solve(5, parse, rearrange)
+    solve(5, parse, crate_mover_9000, crate_mover_9001)

@@ -4,7 +4,7 @@
 
 import unittest
 
-from d05 import parse, rearrange
+from d05 import parse, crate_mover_9000, crate_mover_9001
 
 example1 = """    [D]
 [N] [C]
@@ -17,9 +17,14 @@ move 2 from 2 to 1
 move 1 from 1 to 2"""
 
 
-class RearrangeTests(unittest.TestCase):
+class CrateMover9000Tests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(rearrange(parse(example1)), 'CMZ')
+        slf.assertEqual(crate_mover_9000(parse(example1)), 'CMZ')
+
+
+class CrateMover9001Tests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(crate_mover_9001(parse(example1)), 'MCD')
 
 
 if __name__ == "__main__":
