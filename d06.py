@@ -10,7 +10,7 @@ def parse(data):
 
 
 def find_start(buffer, n):
-    for i in range(0, len(buffer) - n):
+    for i in range(len(buffer) - n):
         if len(set(buffer[i:i+n])) == n:
             return i + n
 
