@@ -4,7 +4,7 @@
 
 import unittest
 
-from d07 import parse, total_size
+from d07 import parse, total_size, free_space
 
 example1 = """$ cd /
 $ ls
@@ -34,6 +34,11 @@ $ ls
 class TotalSizeTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(total_size(parse(example1)), 95437)
+
+
+class FreeSpaceTest(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(free_space(parse(example1)), 24933642)
 
 
 if __name__ == "__main__":

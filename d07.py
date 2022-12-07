@@ -11,6 +11,7 @@ class Directory:
     def __init__(slf):
         slf.files = {}
         slf.dirs = defaultdict(Directory)
+        slf._size = None
 
     def sub(slf, name):
         return slf.dirs[name]
@@ -20,7 +21,9 @@ class Directory:
 
     @property
     def size(slf, max_size=10000):
-        return sum(slf.files.values()) + sum(d.size for d in slf.dirs.values())
+        if slf._size is None:
+            slf._size = sum(slf.files.values()) + sum(d.size for d in slf.dirs.values())
+        return slf._size
 
 
 def parse(data):
@@ -50,12 +53,23 @@ def parse(data):
 def total_size(tree, max_size=100000):
     total = 0
     for name, dir in tree.dirs.items():
-        size = dir.size
-        if size <= max_size:
-            total += size
+        if dir.size <= max_size:
+            total += dir.size
         total += total_size(dir, max_size)
     return total
 
 
+def free_space(tree, total_space=70000000, target_space=30000000):
+    min_size = target_space - total_space + tree.size
+    to_delete = None
+    stack = [tree]
+    while len(stack) > 0:
+        dir = stack.pop()
+        if dir.size >= min_size and (to_delete is None or dir.size < to_delete.size):
+            to_delete = dir
+        stack.extend(dir.dirs.values())
+    return to_delete.size
+
+
 if __name__ == "__main__":
-    solve(7, parse, total_size)
+    solve(7, parse, total_size, free_space)
