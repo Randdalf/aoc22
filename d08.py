@@ -21,6 +21,17 @@ class Trees:
                 max_height = height
             pos += dir
 
+    def viewable(slf, pos, dir, max_height):
+        count = 0
+        pos += dir
+        while pos in slf.heights:
+            height = slf.heights[pos]
+            count += 1
+            if height >= max_height:
+                break
+            pos += dir
+        return count
+
 
 def parse(data):
     heights = {}
@@ -41,5 +52,17 @@ def visible_outside(trees):
     return len(visible)
 
 
+def scenic_score(trees):
+    max_score = 0
+    for pos, height in trees.heights.items():
+        score = 1
+        score *= trees.viewable(pos, Vec2(+1, 0), height)
+        score *= trees.viewable(pos, Vec2(-1, 0), height)
+        score *= trees.viewable(pos, Vec2(0, +1), height)
+        score *= trees.viewable(pos, Vec2(0, -1), height)
+        max_score = max(score, max_score)
+    return max_score
+
+
 if __name__ == "__main__":
-    solve(8, parse, visible_outside)
+    solve(8, parse, visible_outside, scenic_score)

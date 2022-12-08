@@ -4,7 +4,7 @@
 
 import unittest
 
-from d08 import parse, visible_outside
+from d08 import parse, visible_outside, scenic_score
 
 example1 = """30373
 25512
@@ -16,6 +16,11 @@ example1 = """30373
 class VisibleOutsideTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(visible_outside(parse(example1)), 21)
+
+
+class ScenicScoreTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(scenic_score(parse(example1)), 8)
 
 
 if __name__ == "__main__":
