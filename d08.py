@@ -21,13 +21,13 @@ class Trees:
                 max_height = height
             pos += dir
 
-    def viewable(slf, pos, dir, max_height):
+    def viewable(slf, pos, dir, from_height):
         count = 0
         pos += dir
         while pos in slf.heights:
             height = slf.heights[pos]
             count += 1
-            if height >= max_height:
+            if height >= from_height:
                 break
             pos += dir
         return count
