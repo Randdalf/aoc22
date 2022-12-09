@@ -26,18 +26,18 @@ def sign(x):
     return int(copysign(1, x)) if x != 0 else 0
 
 
-def tail_visits(motions):
-    head = Vec2(0, 0)
-    tail = Vec2(0, 0)
-    visited = {tail}
+def tail_visits(motions, knots):
+    rope = [Vec2(0, 0) for knot in range(knots)]
+    visited = {rope[-1]}
     for dir in motions:
-        head += dir
-        dist = head - tail
-        if abs(dist.x) > 1 or abs(dist.y) > 1:
-            tail += Vec2(sign(dist.x), sign(dist.y))
-        visited.add(tail)
+        rope[0] += dir
+        for i in range(1, len(rope)):
+            dist = rope[i-1] - rope[i]
+            if abs(dist.x) > 1 or abs(dist.y) > 1:
+                rope[i] += Vec2(sign(dist.x), sign(dist.y))
+        visited.add(rope[-1])
     return len(visited)
 
 
 if __name__ == "__main__":
-    solve(9, parse, tail_visits)
+    solve(9, parse, lambda x: tail_visits(x, 2), lambda x: tail_visits(x, 10))
