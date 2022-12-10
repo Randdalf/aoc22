@@ -4,7 +4,7 @@
 
 import unittest
 
-from d10 import parse, signal_strengths
+from d10 import parse, signal_strengths, crt
 
 example1 = """addx 15
 addx -11
@@ -153,10 +153,22 @@ noop
 noop
 noop"""
 
+expected1 = """##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######....."""
+
 
 class SignalStrengthsTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(signal_strengths(parse(example1)), 13140)
+
+
+class CRTTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(crt(parse(example1)), expected1)
 
 
 if __name__ == "__main__":
