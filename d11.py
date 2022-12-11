@@ -51,28 +51,26 @@ def parse(data):
     return [parse_monkey(monkey) for monkey in data.split('\n\n')]
 
 
-def simulate(monkeys, rounds, limit):
+def monkey_business(monkeys, rounds, limit):
     for round in range(rounds):
         for monkey in monkeys:
-            for item in monkey.items:
+            while len(monkey.items) > 0:
                 monkey.inspections += 1
-                item = monkey.operation(item)
-                item = limit(item)
+                item = limit(monkey.operation(monkey.items.pop()))
                 monkeys[monkey.test(item)].items.append(item)
-            monkey.items.clear()
     activity = [monkey.inspections for monkey in monkeys]
     activity.sort()
     return activity[-1] * activity[-2]
 
 
-def monkey_business(monkeys, rounds=20):
-    return simulate(monkeys, rounds, lambda item: item // 3)
+def monkey_business_20(monkeys):
+    return monkey_business(monkeys, 20, lambda item: item // 3)
 
 
-def funky_business(monkeys, rounds=10000):
+def monkey_business_10k(monkeys):
     limiter = reduce(mul, (monkey.divisor for monkey in monkeys), 1)
-    return simulate(monkeys, rounds, lambda item: item % limiter)
+    return monkey_business(monkeys, 10000, lambda item: item % limiter)
 
 
 if __name__ == "__main__":
-    solve(11, parse, monkey_business, funky_business)
+    solve(11, parse, monkey_business_20, monkey_business_10k)

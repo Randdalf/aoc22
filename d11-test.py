@@ -4,7 +4,7 @@
 
 import unittest
 
-from d11 import parse, monkey_business, funky_business
+from d11 import parse, monkey_business_20, monkey_business_10k
 
 example1 = """Monkey 0:
   Starting items: 79, 98
@@ -35,14 +35,14 @@ Monkey 3:
     If false: throw to monkey 1"""
 
 
-class MonkeyBusinessTests(unittest.TestCase):
+class MonkeyBusiness20Tests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(monkey_business(parse(example1)), 10605)
+        slf.assertEqual(monkey_business_20(parse(example1)), 10605)
 
 
-class FunkyBusinessTests(unittest.TestCase):
+class MonkeyBusiness10kTests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(funky_business(parse(example1)), 2713310158)
+        slf.assertEqual(monkey_business_10k(parse(example1)), 2713310158)
 
 
 if __name__ == "__main__":
