@@ -78,19 +78,16 @@ def hiking_trail(grid):
     def goal(node):
         return node.pos == grid.end
 
+    min_steps = None
     for pos, elevation in grid.elevation.items():
         if elevation > 0:
             continue
-        min_steps = None
-        for pos, elevation in grid.elevation.items():
-            if elevation > 0:
-                continue
-            path = astar(Node(pos, grid), goal, h)
-            if path is None:
-                continue
-            steps = len(path)
-            min_steps = steps if min_steps is None else min(steps, min_steps)
-        return min_steps-1
+        path = astar(Node(pos, grid), goal, h)
+        if path is None:
+            continue
+        steps = len(path)
+        min_steps = steps if min_steps is None else min(steps, min_steps)
+    return min_steps-1
 
 
 if __name__ == "__main__":
