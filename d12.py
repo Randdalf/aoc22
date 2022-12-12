@@ -3,7 +3,7 @@
 """Advent of Code 2022, Day 12"""
 
 from aoc import solve
-from pathfind import dijkstra
+from pathfind import astar
 from vec2 import Vec2
 
 dirs = [
@@ -59,11 +59,39 @@ def parse(data):
     return Grid(elevation, start, end)
 
 
-def fewest_steps(grid):
+def best_signal(grid):
+    def h(node):
+        dist = node.pos - grid.end
+        return dist.x * dist.x + dist.y * dist.y
+
     def goal(node):
         return node.pos == grid.end
-    return len(dijkstra(Node(grid.start, grid), goal))-1
+
+    return len(astar(Node(grid.start, grid), goal, h))-1
+
+
+def hiking_trail(grid):
+    def h(node):
+        dist = node.pos - grid.end
+        return dist.x * dist.x + dist.y * dist.y
+
+    def goal(node):
+        return node.pos == grid.end
+
+    for pos, elevation in grid.elevation.items():
+        if elevation > 0:
+            continue
+        min_steps = None
+        for pos, elevation in grid.elevation.items():
+            if elevation > 0:
+                continue
+            path = astar(Node(pos, grid), goal, h)
+            if path is None:
+                continue
+            steps = len(path)
+            min_steps = steps if min_steps is None else min(steps, min_steps)
+        return min_steps-1
 
 
 if __name__ == "__main__":
-    solve(12, parse, fewest_steps)
+    solve(12, parse, best_signal, hiking_trail)

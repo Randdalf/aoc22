@@ -4,7 +4,7 @@
 
 import unittest
 
-from d12 import parse, fewest_steps
+from d12 import parse, best_signal, hiking_trail
 
 example1 = """Sabqponm
 abcryxxl
@@ -13,9 +13,14 @@ acctuvwj
 abdefghi"""
 
 
-class FewestStepsTests(unittest.TestCase):
+class BestSignalTests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(fewest_steps(parse(example1)), 31)
+        slf.assertEqual(best_signal(parse(example1)), 31)
+
+
+class HikingTrailTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(hiking_trail(parse(example1)), 29)
 
 
 if __name__ == "__main__":
