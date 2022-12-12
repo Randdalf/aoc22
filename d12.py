@@ -2,8 +2,10 @@
 
 """Advent of Code 2022, Day 12"""
 
+import math
+
 from aoc import solve
-from pathfind import astar
+from pathfind import astar, bfs
 from vec2 import Vec2
 
 dirs = [
@@ -22,9 +24,10 @@ class Grid:
 
 
 class Node:
-    def __init__(slf, pos, grid):
+    def __init__(slf, pos, grid, check):
         slf.pos = pos
         slf.grid = grid
+        slf.check = check
 
     def __hash__(slf):
         return hash(slf.pos)
@@ -34,11 +37,14 @@ class Node:
 
     @property
     def neighbors(slf):
-        next_level = slf.grid.elevation[slf.pos] + 1
+        level = slf.grid.elevation[slf.pos]
         for dir in dirs:
             neighbor = slf.pos + dir
-            if next_level >= slf.grid.elevation.get(neighbor, 99):
-                yield Node(neighbor, slf.grid)
+            n_level = slf.grid.elevation.get(neighbor)
+            if n_level is None:
+                continue
+            if slf.check(level, n_level):
+                yield Node(neighbor, slf.grid, slf.check)
 
     def dist(slf, neighbor):
         return 1
@@ -59,6 +65,14 @@ def parse(data):
     return Grid(elevation, start, end)
 
 
+def up_check(from_level, to_level):
+    return from_level+1 >= to_level
+
+
+def down_check(from_level, to_level):
+    return from_level-1 <= to_level
+
+
 def best_signal(grid):
     def h(node):
         dist = node.pos - grid.end
@@ -67,27 +81,16 @@ def best_signal(grid):
     def goal(node):
         return node.pos == grid.end
 
-    return len(astar(Node(grid.start, grid), goal, h))-1
+    return len(astar(Node(grid.start, grid, up_check), goal, h))-1
 
 
 def hiking_trail(grid):
-    def h(node):
-        dist = node.pos - grid.end
-        return dist.x * dist.x + dist.y * dist.y
-
-    def goal(node):
-        return node.pos == grid.end
-
-    min_steps = None
+    dist, prev = bfs(Node(grid.end, grid, down_check))
+    min_steps = math.inf
     for pos, elevation in grid.elevation.items():
-        if elevation > 0:
-            continue
-        path = astar(Node(pos, grid), goal, h)
-        if path is None:
-            continue
-        steps = len(path)
-        min_steps = steps if min_steps is None else min(steps, min_steps)
-    return min_steps-1
+        if elevation == 0:
+            min_steps = min(dist[Node(pos, None, None)], min_steps)
+    return min_steps
 
 
 if __name__ == "__main__":
