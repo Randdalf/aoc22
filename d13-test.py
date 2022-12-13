@@ -4,7 +4,7 @@
 
 import unittest
 
-from d13 import parse, right_order
+from d13 import parse, right_order, decoder_key
 
 example1 = """[1,1,3,1,1]
 [1,1,5,1,1]
@@ -34,6 +34,11 @@ example1 = """[1,1,3,1,1]
 class RightOrderTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(right_order(parse(example1)), 13)
+
+
+class DecoderKeyTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(decoder_key(parse(example1)), 140)
 
 
 if __name__ == "__main__":
