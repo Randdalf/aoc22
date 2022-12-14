@@ -31,7 +31,7 @@ def parse(data):
     return state
 
 
-def sand_flow(state):
+def sand_abyss(state):
     rested = 0
     abyss = max(rock.y for rock in state) + 1
     while True:
@@ -51,5 +51,29 @@ def sand_flow(state):
             sand = step
 
 
+def sand_floor(state):
+    rested = 0
+    floor = max(rock.y for rock in state) + 2
+
+    def blocked(step):
+        return step.y == floor or step in state
+
+    while True:
+        sand = Vec2(500, 0)
+        if sand in state:
+            return rested
+        while True:
+            step = Vec2(sand.x, sand.y + 1)
+            if blocked(step):
+                step.x -= 1
+            if blocked(step):
+                step.x += 2
+            if blocked(step):
+                rested += 1
+                state.add(sand)
+                break
+            sand = step
+
+
 if __name__ == "__main__":
-    solve(14, parse, sand_flow)
+    solve(14, parse, sand_abyss, sand_floor)
