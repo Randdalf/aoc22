@@ -13,14 +13,18 @@ def parse(data):
     return [tuple(map(int, m.groups())) for m in re.finditer(pattern, data)]
 
 
-def no_beacons_row(sensors, y=2000000):
+def manhattan(ax, ay, bx, by):
+    return abs(ax - bx) + abs(ay - by)
+
+
+def no_beacons(sensors, y=2000000):
     # Gather sensor range edges and intersecting beacons.
     edges = []
     y_beacons = set()
     for sx, sy, bx, by in sensors:
         if by == y:
             y_beacons.add((bx, by))
-        b_dist = abs(sx - bx) + abs(sy - by)
+        b_dist = manhattan(sx, sy, bx, by)
         y_dist = abs(sy - y)
         if y_dist > b_dist:
             continue
@@ -42,5 +46,29 @@ def no_beacons_row(sensors, y=2000000):
     return no_beacons
 
 
+def tuning_frequency(sensors, size=4000000):
+    tuned = []
+    for i, (sx, sy, bx, by) in enumerate(sensors):
+        tuned.append((i, sx, sy, manhattan(sx, sy, bx, by)))
+    for i, sx0, sy0, dist0 in tuned:
+        e_dist_y = dist0 + 1
+        for dy in range(sy0 - e_dist_y, sy0 + e_dist_y + 1):
+            if dy < 0 or dy > size:
+                continue
+            e_dist_x = e_dist_y - abs(dy - sy0)
+            for dx in [sx0 - e_dist_x, sx0 + e_dist_x]:
+                if dx < 0 or dx > size:
+                    continue
+                found = True
+                for j, sx1, sy1, dist1 in tuned:
+                    if i == j:
+                        continue
+                    if manhattan(dx, dy, sx1, sy1) <= dist1:
+                        found = False
+                        break
+                if found:
+                    return dx * 4000000 + dy
+
+
 if __name__ == "__main__":
-    solve(15, parse, no_beacons_row)
+    solve(15, parse, no_beacons, tuning_frequency)
