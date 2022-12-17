@@ -57,7 +57,6 @@ def tower_height(jets, n=2022):
     rock_cycle = cycle(rocks)
     for i in range(n):
         simulate(tower, next(rock_cycle), jet_cycle)
-        # print(i, 1 + max(t.y for t in tower))
     return 1 + max(t.y for t in tower)
 
 
