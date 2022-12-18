@@ -4,7 +4,7 @@
 
 import unittest
 
-from d16 import parse, most_pressure
+from d16 import parse, solo_pressure, pair_pressure
 
 example1 = """Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
 Valve BB has flow rate=13; tunnels lead to valves CC, AA
@@ -18,9 +18,14 @@ Valve II has flow rate=0; tunnels lead to valves AA, JJ
 Valve JJ has flow rate=21; tunnel leads to valve II"""
 
 
-class MostPressureTests(unittest.TestCase):
+class SoloPressureTests(unittest.TestCase):
     def test_example1(slf):
-        slf.assertEqual(most_pressure(parse(example1)), 1651)
+        slf.assertEqual(solo_pressure(parse(example1)), 1651)
+
+
+class PairPressureTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(pair_pressure(parse(example1)), 1707)
 
 
 if __name__ == "__main__":
