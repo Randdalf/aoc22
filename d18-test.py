@@ -4,7 +4,7 @@
 
 import unittest
 
-from d18 import parse, surface_area
+from d18 import parse, surface_area, exterior_area
 
 example1 = """2,2,2
 1,2,2
@@ -24,6 +24,11 @@ example1 = """2,2,2
 class SurfaceAreaTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(surface_area(parse(example1)), 64)
+
+
+class ExteriorAreaTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(exterior_area(parse(example1)), 58)
 
 
 if __name__ == "__main__":
