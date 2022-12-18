@@ -97,13 +97,12 @@ def impress_elephants(jets, n=1000000000000):
         if key in cache:
             init_steps = cache[key]
             loop_steps = len(deltas) - init_steps
-            init_delta = sum(deltas[:init_steps])
             loop_delta = sum(deltas[init_steps:])
             n -= init_steps + loop_steps
             skip_loops = n // loop_steps
             skip_delta = skip_loops * loop_delta
             height += skip_delta
-            tower = {(x, y + skip_delta) for x, y, in tower}
+            tower = {(x, y + skip_delta) for x, y in tower}
             for i in range(n % loop_steps):
                 height, _ = simulate(tower, height, next(rock_cycle), jet_cycle)
             return height
