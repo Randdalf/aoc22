@@ -2,6 +2,8 @@
 
 """Advent of Code 2022, Day 19"""
 
+from functools import reduce
+from operator import mul
 import re
 
 from aoc import solve
@@ -33,8 +35,7 @@ def max_geodes(blueprint, cache=None, mins=24, ore=0, clay=0, obs=0, geodes=0,
     key = (mins, ore, clay, obs, geodes, ore_bots, clay_bots, obs_bots,
            geode_bots)
     try:
-        blah = cache[key]
-        return blah
+        return cache[key]
     except KeyError:
         pass
 
@@ -50,19 +51,31 @@ def max_geodes(blueprint, cache=None, mins=24, ore=0, clay=0, obs=0, geodes=0,
     obs += obs_bots
     geodes += geode_bots
 
-    # Consider each possibility of bot construction.
-    opened = []
+    # Consider the outcomes for constructing bots.
     if build_geode:
-        opened.append(max_geodes(blueprint, cache, mins-1, ore-blueprint[4], clay, obs-blueprint[5], geodes, ore_bots, clay_bots, obs_bots, geode_bots+1))
+        opened = max_geodes(blueprint, cache, mins - 1, ore - blueprint[4],
+                            clay, obs - blueprint[5], geodes, ore_bots,
+                            clay_bots, obs_bots, geode_bots + 1)
+    elif build_obs:
+        opened = max_geodes(blueprint, cache, mins - 1, ore - blueprint[2],
+                            clay - blueprint[3], obs, geodes, ore_bots,
+                            clay_bots, obs_bots + 1, geode_bots)
     else:
-        opened.append(max_geodes(blueprint, cache, mins-1, ore, clay, obs, geodes, ore_bots, clay_bots, obs_bots, geode_bots))
+        opened = []
+        opened.append(max_geodes(blueprint, cache, mins - 1, ore, clay, obs,
+                                 geodes, ore_bots, clay_bots, obs_bots,
+                                 geode_bots))
         if build_ore:
-            opened.append(max_geodes(blueprint, cache, mins-1, ore-blueprint[0], clay, obs, geodes, ore_bots+1, clay_bots, obs_bots, geode_bots))
+            opened.append(max_geodes(blueprint, cache, mins - 1,
+                                     ore - blueprint[0], clay, obs, geodes,
+                                     ore_bots + 1, clay_bots, obs_bots,
+                                     geode_bots))
         if build_clay:
-            opened.append(max_geodes(blueprint, cache, mins-1, ore-blueprint[1], clay, obs, geodes, ore_bots, clay_bots+1, obs_bots, geode_bots))
-        if build_obs:
-            opened.append(max_geodes(blueprint, cache, mins-1, ore-blueprint[2], clay-blueprint[3], obs, geodes, ore_bots, clay_bots, obs_bots+1, geode_bots))
-    opened = max(opened)
+            opened.append(max_geodes(blueprint, cache, mins - 1,
+                                     ore - blueprint[1], clay, obs, geodes,
+                                     ore_bots, clay_bots + 1, obs_bots,
+                                     geode_bots))
+        opened = max(opened)
     cache[key] = opened
     return opened
 
@@ -71,5 +84,9 @@ def quality_levels(blueprints):
     return sum(i*max_geodes(bp) for i, bp in enumerate(blueprints, 1))
 
 
+def first_three_32(blueprints):
+    return reduce(mul, (max_geodes(bp, mins=32) for bp in blueprints[:3]))
+
+
 if __name__ == "__main__":
-    solve(19, parse, quality_levels)
+    solve(19, parse, quality_levels, first_three_32)
