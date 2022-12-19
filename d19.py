@@ -29,7 +29,7 @@ def max_geodes(blueprint, cache=None, mins=24, ore=0, clay=0, obs=0, geodes=0,
     if mins == 0:
         return geodes
 
-    # Use a cached result if we're already encountered this state.
+    # Use a cached result if we've already encountered this state.
     if cache is None:
         cache = {}
     key = (mins, ore, clay, obs, geodes, ore_bots, clay_bots, obs_bots,
