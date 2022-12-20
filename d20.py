@@ -9,8 +9,8 @@ def parse(data):
     return [int(x) for x in data.split('\n')]
 
 
-def move(back, fwd, i, n):
-    for step in range(n):
+def move(back, fwd, i, steps):
+    for step in range(steps):
         old_back = back[i]
         old_fwd = fwd[i]
         back[i] = old_fwd
@@ -27,26 +27,30 @@ def lookup(file, prev, next, cursor, offset):
     return file[cursor]
 
 
-def grove_coords(file, offsets=(1000, 2000, 3000)):
-    # Initialise circular linked list.
+def grove_coords(file, key=1, mixes=1, offsets=(1000, 2000, 3000)):
     n = len(file)
-    prev = [None for i in range(n)]
-    next = [None for i in range(n)]
-    for i in range(len(file)):
-        prev[i] = (i-1) % n
-        next[i] = (i+1) % n
+
+    # Apply the decryption key.
+    file = [num * key for num in file]
+    stepss = [num % (n-1) for num in file]
+
+    # Initialise circular linked list.
+    prev = [(i-1) % n for i in range(n)]
+    next = [(i+1) % n for i in range(n)]
 
     # Mix the file.
-    for i, num in enumerate(file):
-        if num < 0:
-            move(next, prev, i, -num)
-        elif num > 0:
-            move(prev, next, i, num)
+    for mix in range(mixes):
+        for i, steps in enumerate(stepss):
+            move(prev, next, i, steps)
 
     # Sum the numbers at each offset.
     zero = file.index(0)
     return sum(lookup(file, prev, next, zero, offset) for offset in offsets)
 
 
+def decrypt(file):
+    return grove_coords(file, key=811589153, mixes=10)
+
+
 if __name__ == "__main__":
-    solve(20, parse, grove_coords)
+    solve(20, parse, grove_coords, decrypt)
