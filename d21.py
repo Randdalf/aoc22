@@ -54,8 +54,6 @@ def sort_monkeys(monkeys, monkey='root'):
     right = sort_monkeys(monkeys, job[2])
     if right:
         monkeys[monkey] = (job[2], commute[job[1]], job[0])
-    else:
-        monkeys[monkey] = (job[0], job[1], job[2])
     return left or right
 
 
