@@ -4,7 +4,7 @@
 
 import unittest
 
-from d21 import parse, monkey_math
+from d21 import parse, monkey_math, yell_number
 
 example1 = """root: pppw + sjmn
 dbpl: 5
@@ -26,6 +26,11 @@ hmdt: 32"""
 class MonkeyMathTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(monkey_math(parse(example1)), 152)
+
+
+class YellNumberTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(yell_number(parse(example1)), 301)
 
 
 if __name__ == "__main__":
