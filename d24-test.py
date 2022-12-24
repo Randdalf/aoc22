@@ -4,7 +4,7 @@
 
 import unittest
 
-from d24 import parse, avoid_blizzards
+from d24 import parse, avoid_blizzards, collect_snacks
 
 example1 = """#.######
 #>>.<^<#
@@ -17,6 +17,11 @@ example1 = """#.######
 class AvoidBlizzardsTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(avoid_blizzards(parse(example1)), 18)
+
+
+class CollectSnacksTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(collect_snacks(parse(example1)), 54)
 
 
 if __name__ == "__main__":

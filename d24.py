@@ -94,7 +94,7 @@ def parse(data):
     return Basin(blizzards, len(row), len(rows))
 
 
-def avoid_blizzards(basin):
+def avoid_blizzards(basin, mins=0):
     def h(node):
         pos = node.pos
         goal = basin.goal
@@ -103,8 +103,16 @@ def avoid_blizzards(basin):
     def goal(node):
         return node.pos == basin.goal
 
-    return len(astar(Node(basin, basin.start, 0), goal, h))-1
+    return len(astar(Node(basin, basin.start, mins), goal, h))-1
+
+
+def collect_snacks(basin):
+    mins = avoid_blizzards(basin)
+    basin.start, basin.goal = basin.goal, basin.start
+    mins += avoid_blizzards(basin, mins)
+    basin.start, basin.goal = basin.goal, basin.start
+    return mins + avoid_blizzards(basin, mins)
 
 
 if __name__ == "__main__":
-    solve(24, parse, avoid_blizzards)
+    solve(24, parse, avoid_blizzards, collect_snacks)
