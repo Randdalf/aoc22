@@ -4,7 +4,7 @@
 
 import unittest
 
-from d23 import parse, ground_tiles
+from d23 import parse, ground_tiles, no_moves
 
 example1 = """..............
 ..............
@@ -23,6 +23,11 @@ example1 = """..............
 class GroundTilesTests(unittest.TestCase):
     def test_example1(slf):
         slf.assertEqual(ground_tiles(parse(example1)), 110)
+
+
+class NoMovesTests(unittest.TestCase):
+    def test_example1(slf):
+        slf.assertEqual(no_moves(parse(example1)), 20)
 
 
 if __name__ == "__main__":

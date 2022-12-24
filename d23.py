@@ -3,6 +3,7 @@
 """Advent of Code 2022, Day 23"""
 
 from collections import Counter
+from itertools import count
 
 from aoc import solve
 
@@ -59,39 +60,46 @@ def any_east(hood):
     return not (hood[2] or hood[3] or hood[4])
 
 
-def ground_tiles(elves, rounds=10):
-    dirs = [
-        (any_north, north),
-        (any_south, south),
-        (any_west, west),
-        (any_east, east)
-    ]
-    for round in range(rounds):
-        # First half: propose movement.
-        proposals = {}
-        for elf in elves:
-            x, y = elf
-            neighborhood = [adj in elves for adj in adjacencies(x, y)]
-            if not any(neighborhood):
-                continue
-            for cond, step in dirs:
-                if cond(neighborhood):
-                    proposals[elf] = step(x, y)
-                    break
+def simulate(elves, dirs):
+    if dirs is None:
+        dirs = [
+            (any_north, north),
+            (any_south, south),
+            (any_west, west),
+            (any_east, east)
+        ]
 
-        # Second half: enact movement.
-        moved = set()
-        counter = Counter(proposals.values())
-        for elf in elves:
-            proposal = proposals.get(elf)
-            if proposal is None or counter[proposal] > 1:
-                moved.add(elf)
-            else:
-                moved.add(proposal)
-        elves = moved
+    # First half: propose movement.
+    proposals = {}
+    for elf in elves:
+        x, y = elf
+        neighborhood = [adj in elves for adj in adjacencies(x, y)]
+        if not any(neighborhood):
+            continue
+        for cond, step in dirs:
+            if cond(neighborhood):
+                proposals[elf] = step(x, y)
+                break
 
-        # End of round: cycle direction checks.
-        dirs = dirs[1:] + dirs[:1]
+    # Second half: enact movement.
+    moved = set()
+    counter = Counter(proposals.values())
+    for elf in elves:
+        proposal = proposals.get(elf)
+        if proposal is None or counter[proposal] > 1:
+            moved.add(elf)
+        else:
+            moved.add(proposal)
+
+    # End of round: cycle direction checks.
+    return moved, dirs[1:] + dirs[:1]
+
+
+def ground_tiles(elves):
+    # Simulate 10 rounds.
+    dirs = None
+    for round in range(10):
+        elves, dirs = simulate(elves, dirs)
 
     # Find the smallest rectangle containing all the elves.
     min_x = min(x for x, y in elves)
@@ -104,5 +112,15 @@ def ground_tiles(elves, rounds=10):
     return area - len(elves)
 
 
+def no_moves(elves):
+    # Simulate rounds until the elves stop moving.
+    dirs = None
+    for round in count(1):
+        moved, dirs = simulate(elves, dirs)
+        if elves == moved:
+            return round
+        elves = moved
+
+
 if __name__ == "__main__":
-    solve(23, parse, ground_tiles)
+    solve(23, parse, ground_tiles, no_moves)
